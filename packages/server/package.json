@@ -5,7 +5,7 @@
   "dev": "nodemon",
   "db:up": "docker compose up -d",
   "db:down": "docker compose down",
-  "db:seed": "ts-node data/seed.ts",
+  "db:seed": "ts-node src/database/seed.ts",
   "db:init": "npm run db:up && npm run db:seed",
   "build": "tsc",
   "start": "node dist/app.js"
