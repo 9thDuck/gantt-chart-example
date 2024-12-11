@@ -4,7 +4,7 @@ import { DEFAULT_PORT } from "./src/constants/app-defaults";
 let config: Config;
 
 export const getAppConfig = () => {
- return config;
+ return Object.assign({}, config);
 };
 
 export const setupAppConfig = () => {
