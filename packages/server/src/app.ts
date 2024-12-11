@@ -1,6 +1,7 @@
 import express from "express";
 import path from "path";
 import { getAppConfig, setupAppConfig } from "../config";
+import { connectToDatabase } from "./database";
 
 const app = express();
 
@@ -17,6 +18,8 @@ setupAppConfig();
 
 const { PORT } = getAppConfig();
 
-app.listen(PORT, () => {
- console.log(`Server is running on port ${PORT}`);
+connectToDatabase().then(() => {
+    app.listen(PORT, () => {
+        console.log(`Server is running on port ${PORT}`);
+    });
 });
