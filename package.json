@@ -1,0 +1,13 @@
+{
+ "name": "gantt-chart-monorepo",
+ "private": true,
+ "workspaces": [
+  "packages/*"
+ ],
+ "scripts": {
+  "dev:server": "npm run dev -w packages/server",
+  "dev:init": "npm run db:init -w packages/server",
+  "dev:client": "npm run dev -w packages/client",
+  "dev": "npm run dev:server & npm run dev:client"
+ }
+}
