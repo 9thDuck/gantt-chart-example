@@ -2,9 +2,9 @@ import express from "express";
 import path from "path";
 import { getAppConfig } from "../config";
 import { connectToDatabase } from "./database";
+import projectsRouter from "./routes/projects";
 
 const app = express();
-
 
 app.use(express.json());
 
@@ -13,6 +13,8 @@ app.use(express.static("public"));
 app.get("/", (_, res) => {
     res.sendFile(path.join(__dirname, "..", "public", "index.html"));
 });
+
+app.use("/api", projectsRouter);
 
 const { PORT } = getAppConfig();
 
