@@ -2,3 +2,4 @@ node_modules
 dist
 .env*
 mongodb_data/
+packages/server/public/**
