@@ -2,12 +2,16 @@ body {
  margin: unset;
 }
 
-#toolbar {
- height: 100px;
+.gantt-container {
+ height: calc(100vh - 250px);
+ width: 100%;
+ position: relative;
 }
 
 #gantt {
+ width: 100%;
  height: 100%;
+ position: absolute;
 }
 
 .baseline {

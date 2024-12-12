@@ -9,6 +9,11 @@ import { useCreateTask } from "../../hooks/useCreateTask";
 import { GanttTask } from "../../types/task";
 import { useDeleteTask } from "../../hooks/useDeleteTask";
 import { useNotification } from "../../context/NotificationContext";
+import {
+ TimezoneOption,
+ useTimezoneManager,
+} from "../../hooks/useTimezoneManager";
+import { TimezoneSelector } from "../timezone/TimezoneSelector";
 
 declare var gantt: GanttStatic;
 
@@ -27,9 +32,37 @@ export const GanttChart: React.FC = () => {
  const { deleteTask } = useDeleteTask();
  const { showSuccess, showError, showLoading, dismissLoading } =
   useNotification();
+ const {
+  selectedTimezone,
+  setSelectedTimezone,
+  timezoneOptions,
+  convertToTimezone,
+ } = useTimezoneManager();
+
  useEffect(() => {
   gantt.config.xml_date = "%Y-%m-%d %H:%i";
   gantt.config.server_utc = true;
+
+  // Add timezone-aware date formatting
+  gantt.templates.parse_date = (date: string) => new Date(date);
+  gantt.templates.format_date = (date: Date) => {
+   const localDate = convertToTimezone(date);
+   return gantt.date.date_to_str("%Y-%m-%d %H:%i")(localDate);
+  };
+
+  // Override display templates to show times in selected timezone
+  gantt.templates.task_date = (date: Date) => {
+   const localDate = convertToTimezone(date);
+   return gantt.date.date_to_str("%Y-%m-%d %H:%i")(localDate);
+  };
+
+  gantt.templates.task_time = (start: Date, end: Date) => {
+   const localStart = convertToTimezone(start);
+   const localEnd = convertToTimezone(end);
+   return `${gantt.templates.task_date(
+    localStart
+   )} - ${gantt.templates.task_date(localEnd)}`;
+  };
 
   // Grid and resizing configuration
   gantt.config.grid_resize = true;
@@ -168,7 +201,7 @@ export const GanttChart: React.FC = () => {
   return () => {
    gantt.detachAllEvents();
   };
- }, []);
+ }, [convertToTimezone]);
 
  useEffect(() => {
   if (data) {
@@ -183,10 +216,6 @@ export const GanttChart: React.FC = () => {
   } else {
    dismissLoading("updateTask");
   }
-
-  return () => {
-   dismissLoading("updateTask");
-  };
  }, [updateTaskLoading]);
 
  useEffect(() => {
@@ -213,11 +242,23 @@ export const GanttChart: React.FC = () => {
   }
  }, [createTaskError]);
 
+ const handleTimezoneChange = (newTimezone: TimezoneOption) => {
+  setSelectedTimezone(newTimezone);
+  gantt.render();
+ };
+
  return (
-  <>
-   <div style={{ width: "100%", height: "100%", position: "absolute" }}>
+  <div className="flex flex-col h-full relative" style={{ minHeight: "500px" }}>
+   <div className="flex justify-end mb-4">
+    <TimezoneSelector
+     selectedTimezone={selectedTimezone}
+     timezoneOptions={timezoneOptions}
+     onTimezoneChange={handleTimezoneChange}
+    />
+   </div>
+   <div className="gantt-container">
     <div id="gantt" />
    </div>
-  </>
+  </div>
  );
 };
