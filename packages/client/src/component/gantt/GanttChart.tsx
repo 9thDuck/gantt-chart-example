@@ -142,17 +142,14 @@ export const GanttChart: React.FC = () => {
    }
   });
 
-  gantt.attachEvent(
-   "onAfterTaskUpdate",
-   async (id: string, task: GanttTask) => {
-    try {
-     await updateTask(task);
-     console.log("Task updated:", task);
-    } catch (error) {
-     console.error("Error updating task:", error);
-    }
+  gantt.attachEvent("onAfterTaskUpdate", async (_, task: GanttTask) => {
+   try {
+    await updateTask(task);
+    console.log("Task updated:", task);
+   } catch (error) {
+    console.error("Error updating task:", error);
    }
-  );
+  });
 
   gantt.attachEvent("onAfterTaskAdd", async (_, newTask: GanttTask) => {
    try {
