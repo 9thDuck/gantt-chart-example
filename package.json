@@ -2,12 +2,21 @@
  "name": "gantt-chart-monorepo",
  "private": true,
  "workspaces": [
-  "packages/*"
+  "packages/client",
+  "packages/server"
  ],
  "scripts": {
   "dev:server": "npm run dev -w packages/server",
   "dev:init": "npm run db:init -w packages/server",
   "dev:client": "npm run dev -w packages/client",
-  "dev": "npm run dev:server & npm run dev:client"
+  "dev": "concurrently \"npm run dev:server\" \"npm run dev:client\"",
+  "build": "npm run build -w packages/client && npm run build -w packages/server",
+  "start": "npm run start -w packages/server",
+  "install:all": "npm install && npm install -w packages/server && npm install -w packages/client",
+  "clean": "rm -rf node_modules && rm -rf packages/*/node_modules",
+  "clean:install": "npm run clean && npm run install:all"
+ },
+ "devDependencies": {
+  "concurrently": "^8.2.2"
  }
 }

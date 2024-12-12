@@ -7,6 +7,7 @@ export default defineConfig({
   build: {
     outDir: '../server/public',
     emptyOutDir: true,
-    watch: {}
+    watch: {},
+    minify: process.env.NODE_ENV === 'production'
   }
 })

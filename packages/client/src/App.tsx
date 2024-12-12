@@ -1,15 +1,16 @@
-import './App.css'
+import { GanttChart } from "./component/gantt/GanttChart";
 
 function App() {
-  return (
-    <div className="min-h-screen bg-gray-100 py-6 flex flex-col justify-center sm:py-12">
-      <div className="relative py-3 sm:max-w-xl sm:mx-auto">
-        <div className="relative px-4 py-10 bg-white shadow-lg sm:rounded-3xl sm:p-20">
-          <h1 className="text-4xl font-bold text-gray-900 mb-8">Hello World</h1>
-        </div>
-      </div>
+ return (
+  <div className="min-h-screen bg-gray-100">
+   <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+    <div className="bg-white rounded-lg shadow p-6">
+     <h1 className="text-3xl font-bold text-gray-900 mb-8">Project Timeline</h1>
+     <GanttChart />
     </div>
-  )
+   </div>
+  </div>
+ );
 }
 
-export default App
+export default App;
