@@ -5,6 +5,8 @@ import "dhtmlx-gantt/codebase/ext/dhtmlxgantt_marker";
 import "dhtmlx-gantt/codebase/skins/dhtmlxgantt_material.css";
 import { useGetTasks } from "../../hooks/useGetTasks";
 import { useUpdateTask } from "../../hooks/useUpdateTask";
+import { useCreateTask } from "../../hooks/useCreateTask";
+import { GanttTask } from "../../types/task";
 
 declare var gantt: GanttStatic;
 
@@ -15,6 +17,11 @@ export const GanttChart: React.FC = () => {
   loading: updateTaskLoading,
   error: updateTaskError,
  } = useUpdateTask();
+ const {
+  createTask,
+  loading: createTaskLoading,
+  error: createTaskError,
+ } = useCreateTask();
  useEffect(() => {
   gantt.config.xml_date = "%Y-%m-%d %H:%i";
   gantt.config.server_utc = true;
@@ -28,6 +35,18 @@ export const GanttChart: React.FC = () => {
     console.error("Error updating task after drag:", error);
    }
   });
+
+  gantt.attachEvent(
+   "onAfterTaskAdd",
+   async (id: string, newTask: GanttTask) => {
+    try {
+     await createTask(newTask);
+     console.log("Task saved:", newTask);
+    } catch (error) {
+     console.error("Error creating task:", error);
+    }
+   }
+  );
 
   return () => {
    gantt.detachAllEvents();

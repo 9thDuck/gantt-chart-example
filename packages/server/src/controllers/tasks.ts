@@ -44,3 +44,28 @@ export const updateTask: RequestHandler = async (req, res, next) => {
   res.status(500).json({ message: "Error updating task", error });
  }
 };
+
+export const createTask: RequestHandler = async (req, res) => {
+ try {
+  const cleanedTask = {
+   id: req.body.id,
+   text: req.body.text,
+   start_date: new Date(req.body.start_date)
+    .toISOString()
+    .slice(0, 16)
+    .replace("T", " "),
+   end_date: new Date(req.body.end_date)
+    .toISOString()
+    .slice(0, 16)
+    .replace("T", " "),
+   duration: req.body.duration,
+   progress: req.body.progress,
+   priority: req.body.priority || "normal",
+  };
+
+  const newTask = await Task.create(cleanedTask);
+  res.status(201).json(newTask);
+ } catch (error) {
+  res.status(500).json({ message: "Error creating task", error });
+ }
+};
