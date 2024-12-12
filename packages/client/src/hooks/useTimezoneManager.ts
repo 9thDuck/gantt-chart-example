@@ -23,6 +23,7 @@ export const timezoneOptions: TimezoneOption[] = [
 
  // Asia
  { value: "Asia/Dubai", label: "Dubai (GST)", offset: 4 },
+ { value: "Asia/Kolkata", label: "India (IST)", offset: 5.5 },
  { value: "Asia/Singapore", label: "Singapore (SGT)", offset: 8 },
  { value: "Asia/Tokyo", label: "Tokyo (JST)", offset: 9 },
  { value: "Asia/Shanghai", label: "Shanghai (CST)", offset: 8 },
@@ -32,9 +33,6 @@ export const timezoneOptions: TimezoneOption[] = [
  { value: "Australia/Sydney", label: "Sydney (AEST)", offset: 10 },
  { value: "Australia/Perth", label: "Perth (AWST)", offset: 8 },
  { value: "Pacific/Auckland", label: "Auckland (NZST)", offset: 12 },
-
- // India
- { value: "Asia/Kolkata", label: "India (IST)", offset: 5.5 },
 ];
 
 const TIMEZONE_STORAGE_KEY = "gantt-chart-timezone";
