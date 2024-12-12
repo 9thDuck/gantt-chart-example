@@ -12,7 +12,6 @@ export const useGetTasks = () => {
    try {
     const response = await axiosClientInstance.get<GanttTask[]>("/tasks");
     setData(response.data);
-    console.log("tasks", response.data);
     setLoading(false);
    } catch (err) {
     setError(err as Error);

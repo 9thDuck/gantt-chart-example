@@ -6,4 +6,6 @@ export type GanttTask = {
  duration: number;
  progress: number;
  priority: "low" | "normal" | "high";
+ parent: number;
+ type?: "task" | "project";
 };

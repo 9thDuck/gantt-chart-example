@@ -34,6 +34,15 @@ const taskSchema = new mongoose.Schema(
    enum: ["low", "normal", "high"],
    default: "normal",
   },
+  parent: {
+   type: Number,
+   default: 0,
+  },
+  type: {
+   type: String,
+   enum: ["task", "project"],
+   default: "task",
+  },
  },
  {
   timestamps: true,

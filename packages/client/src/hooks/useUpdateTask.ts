@@ -8,6 +8,14 @@ export const useUpdateTask = () => {
 
  const updateTask = useCallback(async (task: GanttTask) => {
   try {
+   // Validate parent-child relationship
+   if (task.type === "task" && (!task.parent || task.parent === 0)) {
+    throw new Error("Tasks must have a parent project");
+   }
+   if (task.type === "project" && task.parent !== 0) {
+    throw new Error("Projects cannot have parents");
+   }
+
    await axiosClientInstance.put("/tasks", task);
    setLoading(false);
   } catch (err: any) {

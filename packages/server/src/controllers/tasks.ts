@@ -23,6 +23,8 @@ export const updateTask: RequestHandler = async (req, res, next) => {
    duration: req.body.duration,
    progress: req.body.progress,
    priority: req.body.priority,
+   parent: req.body.parent || 0,
+   type: req.body.type || "task",
   };
 
   const updatedTask = await Task.findByIdAndUpdate(
@@ -61,6 +63,8 @@ export const createTask: RequestHandler = async (req, res) => {
    duration: req.body.duration,
    progress: req.body.progress,
    priority: req.body.priority || "normal",
+   parent: req.body.parent || 0,
+   type: req.body.type || "task",
   };
 
   const newTask = await Task.create(cleanedTask);
