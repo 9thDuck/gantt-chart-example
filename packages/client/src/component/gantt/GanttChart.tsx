@@ -8,6 +8,7 @@ import { useUpdateTask } from "../../hooks/useUpdateTask";
 import { useCreateTask } from "../../hooks/useCreateTask";
 import { GanttTask } from "../../types/task";
 import { useDeleteTask } from "../../hooks/useDeleteTask";
+import { useNotification } from "../../context/NotificationContext";
 
 declare var gantt: GanttStatic;
 
@@ -24,6 +25,7 @@ export const GanttChart: React.FC = () => {
   error: createTaskError,
  } = useCreateTask();
  const { deleteTask } = useDeleteTask();
+ const { showSuccess, showError } = useNotification();
  useEffect(() => {
   gantt.config.xml_date = "%Y-%m-%d %H:%i";
   gantt.config.server_utc = true;
@@ -124,9 +126,10 @@ export const GanttChart: React.FC = () => {
   gantt.attachEvent("onBeforeTaskDelete", async (id: string) => {
    try {
     await deleteTask(id);
+    showSuccess("Task deleted successfully");
     return true;
    } catch (error) {
-    console.error("Failed to delete task:", error);
+    showError("Failed to delete task");
     return false;
    }
   });
@@ -137,8 +140,9 @@ export const GanttChart: React.FC = () => {
    try {
     const modifiedTask = gantt.getTask(id);
     await updateTask(modifiedTask);
+    showSuccess("Task updated successfully");
    } catch (error) {
-    console.error("Error updating task after drag:", error);
+    showError("Failed to update task");
    }
   });
 
@@ -154,9 +158,9 @@ export const GanttChart: React.FC = () => {
   gantt.attachEvent("onAfterTaskAdd", async (_, newTask: GanttTask) => {
    try {
     await createTask(newTask);
-    console.log("Task saved:", newTask);
+    showSuccess("Task created successfully");
    } catch (error) {
-    console.error("Error creating task:", error);
+    showError("Failed to create task");
    }
   });
 
