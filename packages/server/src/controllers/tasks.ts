@@ -73,3 +73,26 @@ export const createTask: RequestHandler = async (req, res) => {
   res.status(500).json({ message: "Error creating task", error });
  }
 };
+
+export const deleteTask: RequestHandler = async (req, res) => {
+ try {
+  const taskId = req.query.id;
+  console.log(taskId);
+
+  if (!taskId) {
+   res.status(400).json({ message: "Task ID is required" });
+   return;
+  }
+
+  const deletedTask = await Task.findOneAndDelete({ id: taskId });
+
+  if (!deletedTask) {
+   res.status(404).json({ message: "Task not found" });
+   return;
+  }
+
+  res.status(200).json({ message: "Task deleted successfully" });
+ } catch (error) {
+  res.status(500).json({ message: "Error deleting task", error });
+ }
+};

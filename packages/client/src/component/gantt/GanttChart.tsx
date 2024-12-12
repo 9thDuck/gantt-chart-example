@@ -7,6 +7,7 @@ import { useGetTasks } from "../../hooks/useGetTasks";
 import { useUpdateTask } from "../../hooks/useUpdateTask";
 import { useCreateTask } from "../../hooks/useCreateTask";
 import { GanttTask } from "../../types/task";
+import { useDeleteTask } from "../../hooks/useDeleteTask";
 
 declare var gantt: GanttStatic;
 
@@ -22,6 +23,7 @@ export const GanttChart: React.FC = () => {
   loading: createTaskLoading,
   error: createTaskError,
  } = useCreateTask();
+ const { deleteTask } = useDeleteTask();
  useEffect(() => {
   gantt.config.xml_date = "%Y-%m-%d %H:%i";
   gantt.config.server_utc = true;
@@ -64,8 +66,8 @@ export const GanttChart: React.FC = () => {
    },
   ];
 
-  gantt.config.buttons_left = ["gantt_save_btn", "gantt_cancel_btn"];
-  gantt.config.buttons_right = ["gantt_delete_btn"];
+  gantt.config.buttons_left = ["gantt_save_btn"];
+  gantt.config.buttons_right = ["gantt_delete_btn", "gantt_cancel_btn"];
 
   // Enable lightbox for task creation/editing
   gantt.config.lightbox = {
@@ -76,25 +78,58 @@ export const GanttChart: React.FC = () => {
      map_to: "text",
      type: "textarea",
      focus: true,
+     label: "Description",
     },
-    { name: "type", type: "typeselect", map_to: "type" },
+    {
+     name: "type",
+     type: "typeselect",
+     map_to: "type",
+     label: "Type",
+    },
     {
      name: "priority",
      height: 70,
      map_to: "priority",
      type: "select",
+     label: "Priority",
      options: [
       { key: "low", label: "Low" },
       { key: "normal", label: "Normal" },
       { key: "high", label: "High" },
      ],
     },
-    { name: "time", type: "duration", map_to: "auto" },
+    {
+     name: "time",
+     type: "duration",
+     map_to: "auto",
+     label: "Time",
+    },
    ],
   };
 
-  // // Enable parent-child relationships
-  // gantt.config.parent_id = "parent";
+  gantt.locale = {
+   ...gantt.locale,
+   labels: {
+    ...gantt.locale.labels,
+    section_description: "Description",
+    section_time: "Time",
+    // @ts-ignore
+    section_priority: "Priority",
+    section_type: "Type",
+    icon_delete: "Delete",
+    confirm_deleting: "Task will be deleted permanently, are you sure?",
+   },
+  };
+
+  gantt.attachEvent("onBeforeTaskDelete", async (id: string) => {
+   try {
+    await deleteTask(id);
+    return true;
+   } catch (error) {
+    console.error("Failed to delete task:", error);
+    return false;
+   }
+  });
 
   gantt.init("gantt");
 
