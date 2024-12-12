@@ -9,7 +9,6 @@ export const getTasks: RequestHandler = async (req, res) => {
 export const updateTask: RequestHandler = async (req, res, next) => {
  try {
   const cleanedTask = {
-   _id: req.body._id,
    id: req.body.id,
    text: req.body.text,
    start_date: new Date(req.body.start_date)
@@ -21,14 +20,14 @@ export const updateTask: RequestHandler = async (req, res, next) => {
     .slice(0, 16)
     .replace("T", " "),
    duration: req.body.duration,
-   progress: req.body.progress,
+   progress: Number(req.body.progress),
    priority: req.body.priority,
    parent: req.body.parent || 0,
    type: req.body.type || "task",
   };
 
-  const updatedTask = await Task.findByIdAndUpdate(
-   cleanedTask._id,
+  const updatedTask = await Task.findOneAndUpdate(
+   { id: cleanedTask.id },
    cleanedTask,
    {
     new: true,
