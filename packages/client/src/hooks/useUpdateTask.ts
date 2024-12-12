@@ -3,12 +3,12 @@ import { axiosClientInstance } from "../api/axiosClientInstance";
 import { GanttTask } from "../types/task";
 
 export const useUpdateTask = () => {
- const [loading, setLoading] = useState<boolean>(true);
+ const [loading, setLoading] = useState<boolean>(false);
  const [error, setError] = useState<Error | null>(null);
 
  const updateTask = useCallback(async (task: GanttTask) => {
   try {
-   // Validate parent-child relationship
+   setLoading(true);
    if (task.type === "task" && (!task.parent || task.parent === 0)) {
     throw new Error("Tasks must have a parent project");
    }
@@ -17,9 +17,11 @@ export const useUpdateTask = () => {
    }
 
    await axiosClientInstance.put("/tasks", task);
-   setLoading(false);
+   setError(null);
   } catch (err: any) {
    setError(err.toString());
+   throw err;
+  } finally {
    setLoading(false);
   }
  }, []);

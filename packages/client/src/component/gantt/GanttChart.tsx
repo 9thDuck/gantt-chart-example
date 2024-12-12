@@ -25,7 +25,8 @@ export const GanttChart: React.FC = () => {
   error: createTaskError,
  } = useCreateTask();
  const { deleteTask } = useDeleteTask();
- const { showSuccess, showError } = useNotification();
+ const { showSuccess, showError, showLoading, dismissLoading } =
+  useNotification();
  useEffect(() => {
   gantt.config.xml_date = "%Y-%m-%d %H:%i";
   gantt.config.server_utc = true;
@@ -175,6 +176,42 @@ export const GanttChart: React.FC = () => {
    gantt.render();
   }
  }, [data]);
+
+ useEffect(() => {
+  if (updateTaskLoading) {
+   showLoading("Updating task...", "updateTask");
+  } else {
+   dismissLoading("updateTask");
+  }
+
+  return () => {
+   dismissLoading("updateTask");
+  };
+ }, [updateTaskLoading]);
+
+ useEffect(() => {
+  if (createTaskLoading) {
+   showLoading("Creating task...", "createTask");
+  } else {
+   dismissLoading("createTask");
+  }
+
+  return () => {
+   dismissLoading("createTask");
+  };
+ }, [createTaskLoading]);
+
+ useEffect(() => {
+  if (updateTaskError) {
+   showError(updateTaskError.toString());
+  }
+ }, [updateTaskError]);
+
+ useEffect(() => {
+  if (createTaskError) {
+   showError(createTaskError.toString());
+  }
+ }, [createTaskError]);
 
  return (
   <>

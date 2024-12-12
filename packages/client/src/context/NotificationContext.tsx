@@ -4,6 +4,8 @@ import toast, { Toaster } from "react-hot-toast";
 interface NotificationContextType {
  showSuccess: (message: string) => void;
  showError: (message: string) => void;
+ showLoading: (message: string, id: string) => void;
+ dismissLoading: (id: string) => void;
 }
 
 const NotificationContext = createContext<NotificationContextType | undefined>(
@@ -15,9 +17,14 @@ export const NotificationProvider: React.FC<{ children: React.ReactNode }> = ({
 }) => {
  const showSuccess = (message: string) => toast.success(message);
  const showError = (message: string) => toast.error(message);
+ const showLoading = (message: string, id: string) =>
+  toast.loading(message, { id });
+ const dismissLoading = (id: string) => toast.dismiss(id);
 
  return (
-  <NotificationContext.Provider value={{ showSuccess, showError }}>
+  <NotificationContext.Provider
+   value={{ showSuccess, showError, showLoading, dismissLoading }}
+  >
    {children}
    <Toaster position="top-right" />
   </NotificationContext.Provider>

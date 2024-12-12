@@ -8,8 +8,10 @@ export const useCreateTask = () => {
 
  const createTask = async (task: GanttTask) => {
   try {
+   setLoading(true);
    await axiosClientInstance.post("/tasks", task);
    setLoading(false);
+   setError(null);
   } catch (err: any) {
    setError(err.toString());
    setLoading(false);
